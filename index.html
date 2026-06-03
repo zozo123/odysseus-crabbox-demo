@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odysseus × crabbox × islo.dev</title>
+<meta name="description" content="Run Odysseus — a self-hosted AI workspace — on a throwaway islo.dev microVM in one command. Warm a box, sync the checkout, run the suite, or boot a clickable live workspace.">
+<meta property="og:title" content="Odysseus × crabbox × islo.dev">
+<meta property="og:description" content="One command to run a self-hosted AI workspace on a throwaway cloud box. ~100s cold, no local install.">
+<meta property="og:type" content="website">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+:root{
+  --bg:#050508; --panel:#0a0a0e; --line:rgba(255,255,255,.06);
+  --fg:#b0b8c0; --dim:#3a3f48; --soft:#6a7280;
+  --green:#00e05a; --amber:#e6a800; --cyan:#0cf; --mag:#c09; --red:#e63946;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;line-height:1.6}
+body{padding:48px 24px 96px;max-width:980px;margin:0 auto}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted var(--cyan)}
+a:hover{color:var(--green);border-color:var(--green)}
+header{margin-bottom:48px;border-left:2px solid var(--green);padding:6px 0 6px 20px}
+h1{font-size:1.6rem;font-weight:700;color:#fff;letter-spacing:-.01em}
+h1 .x{color:var(--dim);margin:0 .35em;font-weight:400}
+h2{font-size:.95rem;font-weight:700;color:var(--green);letter-spacing:.04em;text-transform:uppercase;margin:48px 0 16px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:.85rem;font-weight:700;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;margin:24px 0 10px}
+p{margin-bottom:14px;max-width:78ch}
+.tagline{color:var(--soft);font-size:.85rem;margin-top:8px;max-width:78ch}
+.badges{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;font-size:.7rem}
+.badge{display:inline-block;padding:3px 8px;border:1px solid var(--dim);color:var(--soft);border-radius:2px;letter-spacing:.04em}
+.badge.live{border-color:var(--green);color:var(--green)}
+pre{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--green);padding:14px 18px;font-size:.78rem;line-height:1.55;overflow-x:auto;margin:14px 0;border-radius:0 3px 3px 0}
+pre.cmd{border-left-color:var(--cyan)}
+pre.out{border-left-color:var(--amber)}
+code{color:var(--fg);background:rgba(255,255,255,.04);padding:1px 6px;border-radius:2px;font-size:.85em}
+pre code{background:none;padding:0;font-size:1em}
+.kw{color:var(--mag)}     .str{color:var(--green)}
+.flag{color:var(--amber)} .num{color:var(--amber)}
+.cmt{color:#506068;font-style:italic} .ok{color:var(--green)}
+.bad{color:var(--red)} .dim{color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);padding:14px 18px;border-radius:3px}
+.stat .label{font-size:.65rem;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.stat .v{font-size:1.5rem;color:#fff;font-weight:700}
+.stat .v.good{color:var(--green)} .stat .v.bad{color:var(--red)}
+.stat .sub{font-size:.7rem;color:var(--dim);margin-top:4px}
+.arch{background:var(--panel);border:1px solid var(--line);padding:18px 24px;border-radius:3px;font-size:.74rem;color:var(--soft);white-space:pre;overflow-x:auto;margin:14px 0;line-height:1.7}
+.arch .box{color:var(--green)} .arch .arr{color:var(--dim)} .arch .lab{color:var(--cyan)}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-size:.7rem;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
+footer a{color:var(--soft)} footer a:hover{color:var(--green)}
+.note{border-left:2px solid var(--amber);padding:8px 14px;background:rgba(230,168,0,.04);font-size:.78rem;color:var(--soft);margin:12px 0;border-radius:0 2px 2px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.row{grid-template-columns:1fr}}
+table.ptbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:.78rem;background:var(--panel);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+table.ptbl th,table.ptbl td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line)}
+table.ptbl th{color:var(--soft);font-weight:500;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.02)}
+table.ptbl tr:last-child td{border-bottom:none}
+table.ptbl td:nth-child(4),table.ptbl td:nth-child(5),table.ptbl th:nth-child(4),table.ptbl th:nth-child(5){text-align:center;color:var(--green);font-weight:700;width:60px}
+table.ptbl td.ok{color:var(--green)}
+table.ptbl code{font-size:.85em}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Odysseus <span class="x">×</span> crabbox <span class="x">×</span> islo.dev</h1>
+  <p class="tagline">Run a self-hosted AI workspace on a throwaway cloud box in one command.
+    Warm a fresh islo.dev microVM, sync this checkout, install, and run the suite — or boot
+    a clickable live workspace at a public URL. No local install, nothing left behind.</p>
+  <div class="badges">
+    <span class="badge live">● live · verified Jun 2026</span>
+    <span class="badge"><a href="https://github.com/zozo123/odysseus/pull/1">PR&nbsp;#1</a></span>
+    <span class="badge"><a href="https://github.com/zozo123/odysseus">zozo123/odysseus</a></span>
+    <span class="badge"><a href="https://github.com/pewdiepie-archdaemon/odysseus">upstream</a></span>
+    <span class="badge"><a href="https://github.com/openclaw/crabbox">openclaw/crabbox</a></span>
+    <span class="badge"><a href="https://islo.dev">islo.dev</a></span>
+  </div>
+</header>
+
+<h2>What this is</h2>
+<p><a href="https://github.com/pewdiepie-archdaemon/odysseus">Odysseus</a> is a self-hosted,
+local-first AI workspace — chat, agents, deep research, a model cookbook, email, calendar,
+notes. Trying it normally means clone, venv, <code>pip install</code>, <code>python setup.py</code>,
+boot uvicorn — on <em>your</em> machine.</p>
+<p>This fork adds <strong>one file</strong> — <a href="https://github.com/zozo123/odysseus/blob/main/crabbox.sh"><code>crabbox.sh</code></a> —
+that does all of it on a remote <a href="https://islo.dev">islo.dev</a> microVM instead, and throws the
+box away when you're done. <a href="https://github.com/openclaw/crabbox">crabbox</a> is the ephemeral
+"warm a box, sync the diff, run the suite" path; the islo.dev CLI is the persistent "click the
+live app" path. App code is untouched.</p>
+
+<pre class="cmd"><span class="cmt"># no local install — just an islo.dev key</span>
+git clone https://github.com/zozo123/odysseus.git &amp;&amp; <span class="kw">cd</span> odysseus
+<span class="kw">export</span> ISLO_API_KEY=<span class="str">$(cat islo.key)</span>
+
+./crabbox.sh serve   <span class="cmt"># boot Odysseus → public URL you can click</span>
+./crabbox.sh test    <span class="cmt"># warm a box, run the suite, tear down</span>
+./crabbox.sh shell   <span class="cmt"># interactive shell on the box</span></pre>
+
+<h2>Pipeline</h2>
+<div class="arch"><span class="lab">your laptop</span>                          <span class="lab">islo.dev microVM (python:3.12-slim)</span>
+<span class="arr">┌───────────────────┐</span>          <span class="arr">┌──────────────────────────────────┐</span>
+<span class="arr">│</span> ./crabbox.sh test <span class="arr">│</span> <span class="box">──warm──▶</span> <span class="arr">│</span> <span class="box">lease isb_…  (golden-barnacle)</span>    <span class="arr">│</span>
+<span class="arr">│</span> 808 files 32.7MiB <span class="arr">│</span> <span class="box">──sync──▶</span> <span class="arr">│</span> rsync working tree → /workspace   <span class="arr">│</span>
+<span class="arr">└───────────────────┘</span>          <span class="arr">│</span> apt deps · pip · python setup.py  <span class="arr">│</span>
+                               <span class="arr">│</span> <span class="box">pytest</span> ──▶ stream stdout + exit  <span class="arr">│</span>
+        <span class="box">exit code ◀────────────────</span> <span class="arr">│</span> release lease (or --keep)         <span class="arr">│</span>
+                               <span class="arr">└──────────────────────────────────┘</span></div>
+
+<h2>Live run · Odysseus suite on islo.dev</h2>
+<div class="grid">
+  <div class="stat"><div class="label">Green slice</div>
+    <div class="v good">GREEN_PASSED&nbsp;passed</div><div class="sub">0 failed · ~GREEN_CMDs on the box</div></div>
+  <div class="stat"><div class="label">Cold start → results</div>
+    <div class="v">~1m43s</div><div class="sub">warm + sync 15.1s + install + run</div></div>
+  <div class="stat"><div class="label">Real exit codes</div>
+    <div class="v bad">exit&nbsp;1</div><div class="sub">surfaced a real upstream test failure</div></div>
+</div>
+
+<h3>1 · warm a box, sync the checkout</h3>
+<pre class="out">leased <span class="num">isb_crabbox-odysseus-e8dffb</span> slug=<span class="ok">golden-barnacle</span> provider=<span class="ok">islo</span>
+sync candidate: <span class="num">808</span> files, <span class="num">32.7 MiB</span>  dirty_delta=5 files, 41.2 KiB
+sync complete in <span class="num">15.144s</span></pre>
+
+<h3>2 · install + first-time setup (on the box)</h3>
+<pre class="out">▶ system deps      <span class="dim">apt-get install git build-essential</span>
+▶ python deps      <span class="dim">pip install -r requirements.txt</span>
+▶ first-time setup
+  <span class="ok">[ok]</span> data/ · logs/ · chroma/ · rag/ · memory_vectors/
+  <span class="ok">[ok]</span> .env created from .env.example
+  <span class="ok">[ok]</span> Database initialized
+  <span class="ok">[ok]</span> Initial admin user created (admin)  <span class="dim"># temp password printed</span></pre>
+
+<h3>3 · run the suite — clean green slice</h3>
+<pre class="cmd">ODYSSEUS_TESTS=<span class="str">"tests -q -k 'recurrence or static_mime or ordinal or preview or …'"</span> ./crabbox.sh test</pre>
+<pre class="out"><span class="ok">GREEN_DOTS</span>
+<span class="ok">GREEN_PASSED passed</span>, GREEN_DESELECTED deselected in <span class="num">GREEN_PYTIME</span>
+islo run summary  sync=<span class="num">15.1s</span>  command=<span class="num">GREEN_CMDs</span>  total=<span class="num">GREEN_TOTAL</span>  <span class="ok">exit=0</span></pre>
+
+<h3>4 · the harness reports real failures, too</h3>
+<p>A broader slice surfaced a genuine pre-existing bug in the upstream GGUF quant-fit logic —
+and <code>crabbox.sh</code> propagated the non-zero exit straight back to the laptop. The box isn't
+faking green:</p>
+<pre class="out">tests/test_hwfit_quant_formats.py::…strict_not_lower_quant_fallback
+<span class="bad">E   TypeError: 'NoneType' object is not subscriptable</span>  <span class="dim"># analyze_model() returned None</span>
+<span class="bad">1 failed</span>, <span class="ok">26 passed</span>, 1802 deselected in 3.69s
+islo run summary  sync=15.1s  command=41.4s  total=1m42.5s  <span class="bad">exit=1</span></pre>
+<div class="note"><strong>Honest scope.</strong> These are slices of Odysseus's 355-file suite chosen to run
+fast and dependency-light; <code>ODYSSEUS_TESTS=tests</code> runs the whole thing. The point here is the
+<em>harness</em>: warm → sync → install → run → real exit code, end-to-end, on a box that didn't exist
+two minutes ago. The quant failure is upstream's, not the sandbox's.</div>
+
+<h2>One flag, many providers</h2>
+<p>crabbox is a control plane that fronts ~25 sandbox/VM backends. The same
+<code>crabbox.sh</code> runs Odysseus on any of them by swapping one flag — islo.dev is the
+live-verified default here.</p>
+<table class="ptbl">
+  <tr><th>provider</th><th>kind</th><th>flag</th><th>verified</th></tr>
+  <tr><td><code>islo</code></td><td>microVM</td><td><code>--provider islo</code></td><td class="ok">✓</td></tr>
+  <tr><td><code>local-container</code></td><td>local Docker</td><td><code>--provider local-container</code></td><td class="dim">·</td></tr>
+  <tr><td><code>e2b</code> / <code>daytona</code> / <code>modal</code></td><td>cloud sandbox</td><td><code>--provider …</code></td><td class="dim">·</td></tr>
+  <tr><td><code>aws</code> / <code>gcp</code> / <code>hetzner</code></td><td>VM</td><td><code>--provider …</code></td><td class="dim">·</td></tr>
+</table>
+
+<h2>Why this matters</h2>
+<p>"Self-hosted" usually means "I'll try it this weekend." A throwaway box collapses that to one
+command: a reviewer, a CI job, or a curious stranger can stand the whole workspace up, click around
+a real running instance, and discard it — without trusting it near their own machine. Generate once,
+run anywhere, leave nothing behind.</p>
+
+<footer>
+  <a href="https://github.com/zozo123/odysseus">zozo123/odysseus</a>
+  <a href="https://github.com/zozo123/odysseus/blob/main/crabbox.sh">crabbox.sh</a>
+  <a href="https://github.com/zozo123/odysseus/pull/1">PR #1</a>
+  <a href="https://github.com/pewdiepie-archdaemon/odysseus">upstream odysseus</a>
+  <a href="https://github.com/openclaw/crabbox">openclaw/crabbox</a>
+  <a href="https://islo.dev">islo.dev</a>
+  <span style="margin-left:auto">verified Jun 2026 on a live islo.dev sandbox</span>
+</footer>
+
+</body>
+</html>
