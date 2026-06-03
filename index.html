@@ -65,9 +65,10 @@ table.ptbl code{font-size:.85em}
 
 <header>
   <h1>Odysseus <span class="x">×</span> crabbox <span class="x">×</span> islo.dev</h1>
-  <p class="tagline">Run a self-hosted AI workspace on a throwaway cloud box in one command.
-    Warm a fresh islo.dev microVM, sync this checkout, install, and run the suite — or boot
-    a clickable live workspace at a public URL. No local install, nothing left behind.</p>
+  <p class="tagline">Run a self-hosted AI workspace on a throwaway cloud box in one command —
+    and let its agent run code on throwaway boxes too. Same crabbox binary, same islo.dev
+    fabric, both directions: sandbox the app, and sandbox the agent. No local install,
+    nothing left behind.</p>
   <div class="badges">
     <span class="badge live">● live · verified Jun 2026</span>
     <span class="badge"><a href="https://github.com/zozo123/odysseus/pull/1">PR&nbsp;#1</a></span>
@@ -96,6 +97,26 @@ git clone https://github.com/zozo123/odysseus.git &amp;&amp; <span class="kw">cd
 ./crabbox.sh serve   <span class="cmt"># boot Odysseus → public URL you can click</span>
 ./crabbox.sh test    <span class="cmt"># warm a box, run the suite, tear down</span>
 ./crabbox.sh shell   <span class="cmt"># interactive shell on the box</span></pre>
+
+<h2>It runs both directions</h2>
+<p>The fork wires crabbox into Odysseus <em>twice</em>, in opposite directions —
+same binary, same islo.dev fabric:</p>
+<div class="arch"><span class="lab">outer · crabbox.sh</span>     you <span class="arr">──▶</span> crabbox <span class="arr">──▶</span> islo box <span class="box">runs Odysseus</span>        <span class="dim"># sandbox the app</span>
+<span class="lab">inner · crabbox MCP</span>    Odysseus agent <span class="arr">──▶</span> crabbox <span class="arr">──▶</span> islo box <span class="box">runs the agent's code</span>   <span class="dim"># sandbox the agent</span></div>
+<p>The inner path is a built-in MCP server
+(<a href="https://github.com/zozo123/odysseus/blob/main/mcp_servers/crabbox_server.py"><code>mcp_servers/crabbox_server.py</code></a>)
+that gives the agent one tool, <code>crabbox_run</code>: execute a command on a fresh
+throwaway box and get back stdout + exit code. So AI-generated code runs on a
+disposable microVM, <strong>never on the Odysseus host</strong> — which is exactly what
+<a href="https://islo.dev">islo.dev</a> is for ("a secure sandbox for coding agents"). It degrades
+cleanly: no crabbox or key → the tool returns a hint instead of failing.</p>
+<pre class="out"><span class="dim">agent tool call:</span> crabbox_run(<span class="str">"echo agent-on-the-box &amp;&amp; python -c 'print(2+2)' &amp;&amp; uname -a"</span>)
+<span class="dim">leased isb_… slug=silver-crab provider=islo</span>
+agent-on-the-box
+2+2= <span class="num">4</span>
+Linux crabbox-islo-… 6.16.9+ x86_64 GNU/Linux
+<span class="dim">islo run summary  sync_skipped=true  command=1.795s  total=42.2s  </span><span class="ok">exit=0</span>
+<span class="dim">[crabbox: provider=islo image=python:3.12-slim exit=0]</span></pre>
 
 <h2>Pipeline</h2>
 <div class="arch"><span class="lab">your laptop</span>                          <span class="lab">islo.dev microVM (python:3.12-slim)</span>
