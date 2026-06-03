@@ -110,7 +110,7 @@ git clone https://github.com/zozo123/odysseus.git &amp;&amp; <span class="kw">cd
 <h2>Live run · Odysseus suite on islo.dev</h2>
 <div class="grid">
   <div class="stat"><div class="label">Green slice</div>
-    <div class="v good">GREEN_PASSED&nbsp;passed</div><div class="sub">0 failed · ~GREEN_CMDs on the box</div></div>
+    <div class="v good">99&nbsp;passed</div><div class="sub">0 failed · 4 skipped · 41.3s on the box</div></div>
   <div class="stat"><div class="label">Cold start → results</div>
     <div class="v">~1m43s</div><div class="sub">warm + sync 15.1s + install + run</div></div>
   <div class="stat"><div class="label">Real exit codes</div>
@@ -133,22 +133,24 @@ sync complete in <span class="num">15.144s</span></pre>
 
 <h3>3 · run the suite — clean green slice</h3>
 <pre class="cmd">ODYSSEUS_TESTS=<span class="str">"tests -q -k 'recurrence or static_mime or ordinal or preview or …'"</span> ./crabbox.sh test</pre>
-<pre class="out"><span class="ok">GREEN_DOTS</span>
-<span class="ok">GREEN_PASSED passed</span>, GREEN_DESELECTED deselected in <span class="num">GREEN_PYTIME</span>
-islo run summary  sync=<span class="num">15.1s</span>  command=<span class="num">GREEN_CMDs</span>  total=<span class="num">GREEN_TOTAL</span>  <span class="ok">exit=0</span></pre>
+<pre class="out"><span class="ok">.....sss........................................................s....... [ 69%]
+...............................                                          [100%]</span>
+<span class="ok">99 passed</span>, 4 skipped, 1736 deselected in <span class="num">3.70s</span>
+islo run summary  sync=<span class="num">15.1s</span>  command=<span class="num">41.3s</span>  total=<span class="num">1m42.1s</span>  <span class="ok">exit=0</span></pre>
 
 <h3>4 · the harness reports real failures, too</h3>
-<p>A broader slice surfaced a genuine pre-existing bug in the upstream GGUF quant-fit logic —
-and <code>crabbox.sh</code> propagated the non-zero exit straight back to the laptop. The box isn't
+<p>A broader slice surfaced two genuine pre-existing upstream bugs — and
+<code>crabbox.sh</code> propagated the non-zero exit straight back to the laptop. The box isn't
 faking green:</p>
-<pre class="out">tests/test_hwfit_quant_formats.py::…strict_not_lower_quant_fallback
-<span class="bad">E   TypeError: 'NoneType' object is not subscriptable</span>  <span class="dim"># analyze_model() returned None</span>
-<span class="bad">1 failed</span>, <span class="ok">26 passed</span>, 1802 deselected in 3.69s
-islo run summary  sync=15.1s  command=41.4s  total=1m42.5s  <span class="bad">exit=1</span></pre>
+<pre class="out"><span class="bad">FAILED</span> tests/test_hwfit_quant_formats.py::…strict_not_lower_quant_fallback
+        <span class="bad">TypeError: 'NoneType' object is not subscriptable</span>  <span class="dim"># analyze_model() → None</span>
+<span class="bad">FAILED</span> tests/test_cookbook_helpers.py::test_pip_install_fallback_chain_propagates_failure_in_venv
+<span class="bad">2 failed</span>, <span class="ok">104 passed</span>, 4 skipped, 1729 deselected in 3.91s
+islo run summary  sync=15.0s  command=42.8s  total=1m43.6s  <span class="bad">exit=1</span></pre>
 <div class="note"><strong>Honest scope.</strong> These are slices of Odysseus's 355-file suite chosen to run
 fast and dependency-light; <code>ODYSSEUS_TESTS=tests</code> runs the whole thing. The point here is the
 <em>harness</em>: warm → sync → install → run → real exit code, end-to-end, on a box that didn't exist
-two minutes ago. The quant failure is upstream's, not the sandbox's.</div>
+two minutes ago. Both failures are upstream's, not the sandbox's.</div>
 
 <h2>One flag, many providers</h2>
 <p>crabbox is a control plane that fronts ~25 sandbox/VM backends. The same
