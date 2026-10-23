@@ -3,16 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odysseus × crabbox × islo.dev</title>
-<meta name="description" content="Run Odysseus — a self-hosted AI workspace — on a throwaway islo.dev microVM in one command. Warm a box, sync the checkout, run the suite, or boot a clickable live workspace.">
-<meta property="og:title" content="Odysseus × crabbox × islo.dev">
-<meta property="og:description" content="One command to run a self-hosted AI workspace on a throwaway cloud box. ~100s cold, no local install.">
-<meta property="og:type" content="website">
+<title>Odysseus on throwaway islo.dev microVMs — Yossi Eliaz</title>
+<meta name="description" content="Yossi Eliaz's June 2026 demo: run the Odysseus AI workspace and its agent's code on throwaway islo.dev microVMs using openclaw/crabbox.">
+<meta name="author" content="Yossi Eliaz">
+<link rel="canonical" href="https://zozo123.github.io/odysseus-crabbox-demo/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Odysseus on throwaway islo.dev microVMs">
+<meta property="og:description" content="A June 2026 demo by Yossi Eliaz: run the Odysseus AI workspace, and its agent's code, on throwaway islo.dev microVMs via openclaw/crabbox. ~100s cold start, no local install.">
+<meta property="og:url" content="https://zozo123.github.io/odysseus-crabbox-demo/">
+<meta property="og:image" content="https://zozo123.github.io/odysseus-crabbox-demo/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Odysseus on throwaway islo.dev microVMs. Yossi Eliaz, demo, June 2026.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Odysseus on throwaway islo.dev microVMs">
+<meta name="twitter:description" content="A June 2026 demo by Yossi Eliaz: run the Odysseus AI workspace, and its agent's code, on throwaway islo.dev microVMs via openclaw/crabbox.">
+<meta name="twitter:image" content="https://zozo123.github.io/odysseus-crabbox-demo/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Odysseus on throwaway islo.dev microVMs",
+  "description": "A June 2026 demo: run the Odysseus AI workspace and its agent's code on throwaway islo.dev microVMs using openclaw/crabbox.",
+  "url": "https://zozo123.github.io/odysseus-crabbox-demo/",
+  "image": "https://zozo123.github.io/odysseus-crabbox-demo/og.png",
+  "datePublished": "2026-06-03",
+  "dateModified": "2026-10-22",
+  "author": {
+    "@type": "Person",
+    "name": "Yossi Eliaz",
+    "url": "https://yossieliaz.netlify.app/",
+    "sameAs": ["https://github.com/zozo123", "https://www.linkedin.com/in/yossi-eliaz/"]
+  },
+  "isBasedOn": ["https://github.com/odysseus-dev/odysseus", "https://github.com/openclaw/crabbox"]
+}
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 :root{
   --bg:#050508; --panel:#0a0a0e; --line:rgba(255,255,255,.06);
-  --fg:#b0b8c0; --dim:#3a3f48; --soft:#6a7280;
+  --fg:#b0b8c0; --dim:#7a828e; --soft:#9aa3ae;
   --green:#00e05a; --amber:#e6a800; --cyan:#0cf; --mag:#c09; --red:#e63946;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -28,8 +58,10 @@ h3{font-size:.85rem;font-weight:700;color:var(--amber);letter-spacing:.06em;text
 p{margin-bottom:14px;max-width:78ch}
 .tagline{color:var(--soft);font-size:.85rem;margin-top:8px;max-width:78ch}
 .badges{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;font-size:.7rem}
-.badge{display:inline-block;padding:3px 8px;border:1px solid var(--dim);color:var(--soft);border-radius:2px;letter-spacing:.04em}
-.badge.live{border-color:var(--green);color:var(--green)}
+.badge{display:inline-flex;align-items:center;min-height:32px;padding:6px 10px;border:1px solid var(--dim);color:var(--soft);border-radius:2px;letter-spacing:.04em}
+a.badge{color:var(--cyan)}
+a.badge:hover{color:var(--green);border-color:var(--green)}
+.badge.verified{border-color:var(--green);color:var(--green)}
 pre{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--green);padding:14px 18px;font-size:.78rem;line-height:1.55;overflow-x:auto;margin:14px 0;border-radius:0 3px 3px 0}
 pre.cmd{border-left-color:var(--cyan)}
 pre.out{border-left-color:var(--amber)}
@@ -48,7 +80,8 @@ pre code{background:none;padding:0;font-size:1em}
 .arch{background:var(--panel);border:1px solid var(--line);padding:18px 24px;border-radius:3px;font-size:.74rem;color:var(--soft);white-space:pre;overflow-x:auto;margin:14px 0;line-height:1.7}
 .arch .box{color:var(--green)} .arch .arr{color:var(--dim)} .arch .lab{color:var(--cyan)}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-size:.7rem;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
-footer a{color:var(--soft)} footer a:hover{color:var(--green)}
+footer .foot-note{margin-left:auto}
+footer a{color:var(--soft);display:inline-block;padding:4px 0} footer a:hover{color:var(--green)}
 .note{border-left:2px solid var(--amber);padding:8px 14px;background:rgba(230,168,0,.04);font-size:.78rem;color:var(--soft);margin:12px 0;border-radius:0 2px 2px 0}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:720px){.row{grid-template-columns:1fr}}
@@ -65,30 +98,34 @@ table.ptbl code{font-size:.85em}
 
 <header>
   <h1>Odysseus <span class="x">×</span> crabbox <span class="x">×</span> islo.dev</h1>
+  <p class="tagline">A demo by <a href="https://zozo123.github.io/">Yossi Eliaz</a>. Odysseus is developed by
+    <a href="https://github.com/odysseus-dev/odysseus">odysseus-dev</a> and crabbox by
+    <a href="https://github.com/openclaw/crabbox">openclaw</a>; this page documents a fork's
+    <code>crabbox.sh</code> integration.</p>
   <p class="tagline">Run a self-hosted AI workspace on a throwaway cloud box in one command —
     and let its agent run code on throwaway boxes too. Same crabbox binary, same islo.dev
     fabric, both directions: sandbox the app, and sandbox the agent. No local install,
     nothing left behind.</p>
   <div class="badges">
-    <span class="badge live">● live · verified Jun 2026</span>
-    <span class="badge"><a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2076">upstream PR&nbsp;#2076</a></span>
-    <span class="badge"><a href="https://github.com/pewdiepie-archdaemon/odysseus/issues/2150">issue&nbsp;#2150</a></span>
-    <span class="badge"><a href="https://github.com/zozo123/odysseus">code (fork)</a></span>
-    <span class="badge"><a href="https://github.com/openclaw/crabbox">openclaw/crabbox</a></span>
-    <span class="badge"><a href="https://islo.dev">islo.dev</a></span>
+    <span class="badge verified">verified on islo.dev · Jun 2026 (no hosted instance)</span>
+    <a class="badge" href="https://github.com/odysseus-dev/odysseus/pull/2076">upstream PR&nbsp;#2076 (closed, not merged)</a>
+    <a class="badge" href="https://github.com/odysseus-dev/odysseus/issues/2150">issue&nbsp;#2150</a>
+    <a class="badge" href="https://github.com/zozo123/odysseus">code (fork)</a>
+    <a class="badge" href="https://github.com/openclaw/crabbox">openclaw/crabbox</a>
+    <a class="badge" href="https://islo.dev">islo.dev</a>
   </div>
 </header>
 
 <div class="note"><strong>The 30-second version.</strong>
-<a href="https://github.com/pewdiepie-archdaemon/odysseus">Odysseus</a> = a self-hosted AI workspace (chat, agents, research, email, notes).
+<a href="https://github.com/odysseus-dev/odysseus">Odysseus</a> = a self-hosted AI workspace (chat, agents, research, email, notes).
 <a href="https://crabbox.sh">crabbox</a> = a CLI that warms a throwaway cloud box, runs a command on it, and tears it down.
-<a href="https://islo.dev">islo.dev</a> = the secure microVM fabric those boxes run on.
+<a href="https://islo.dev">islo.dev</a> = the microVM sandbox service those boxes run on.
 This fork wires them together so (1) you can run the whole workspace without installing
 anything locally, and (2) the workspace's AI agent runs its code on disposable boxes
-instead of on your host. Every number on this page is from a real run on a live islo.dev box.</div>
+instead of on your host. Every number on this page is from real runs on islo.dev boxes in June 2026.</div>
 
 <h2>What this is</h2>
-<p><a href="https://github.com/pewdiepie-archdaemon/odysseus">Odysseus</a> is a self-hosted,
+<p><a href="https://github.com/odysseus-dev/odysseus">Odysseus</a> is a self-hosted,
 local-first AI workspace — chat, agents, deep research, a model cookbook, email, calendar,
 notes. Trying it normally means clone, venv, <code>pip install</code>, <code>python setup.py</code>,
 boot uvicorn — on <em>your</em> machine.</p>
@@ -115,8 +152,8 @@ same binary, same islo.dev fabric:</p>
 (<a href="https://github.com/zozo123/odysseus/blob/main/mcp_servers/crabbox_server.py"><code>mcp_servers/crabbox_server.py</code></a>)
 that gives the agent one tool, <code>crabbox_run</code>: execute a command on a fresh
 throwaway box and get back stdout + exit code. So AI-generated code runs on a
-disposable microVM, <strong>never on the Odysseus host</strong> — which is exactly what
-<a href="https://islo.dev">islo.dev</a> is for ("a secure sandbox for coding agents"). It degrades
+disposable microVM, <strong>never on the Odysseus host</strong>. (islo.dev is built by my
+employer, Incredibuild.) It degrades
 cleanly: no crabbox or key → the tool returns a hint instead of failing.</p>
 <pre class="out"><span class="dim">agent tool call:</span> crabbox_run(<span class="str">"echo agent-on-the-box &amp;&amp; python -c 'print(2+2)' &amp;&amp; uname -a"</span>)
 <span class="dim">leased isb_… slug=silver-crab provider=islo</span>
@@ -136,7 +173,7 @@ Linux crabbox-islo-… 6.16.9+ x86_64 GNU/Linux
         <span class="box">exit code ◀────────────────</span> <span class="arr">│</span> release lease (or --keep)         <span class="arr">│</span>
                                <span class="arr">└──────────────────────────────────┘</span></div>
 
-<h2>Live run · Odysseus suite on islo.dev</h2>
+<h2>Recorded run · Odysseus suite on islo.dev (Jun 2026)</h2>
 <div class="grid">
   <div class="stat"><div class="label">Green slice</div>
     <div class="v good">99&nbsp;passed</div><div class="sub">0 failed · 4 skipped · 41.3s on the box</div></div>
@@ -182,15 +219,18 @@ fast and dependency-light; <code>ODYSSEUS_TESTS=tests</code> runs the whole thin
 two minutes ago. Both failures are upstream's, not the sandbox's.</div>
 
 <h2>One flag, many providers</h2>
-<p>crabbox is a control plane that fronts ~25 sandbox/VM backends. The same
-<code>crabbox.sh</code> runs Odysseus on any of them by swapping one flag — islo.dev is the
-live-verified default here.</p>
+<p>crabbox supports many sandbox/VM providers (see the
+<a href="https://github.com/openclaw/crabbox">openclaw/crabbox README</a>). The same
+<code>crabbox.sh</code> can target another provider by swapping one flag; islo.dev is the
+default and the only provider verified here.</p>
 <table class="ptbl">
-  <tr><th>provider</th><th>kind</th><th>flag</th><th>verified</th></tr>
+  <thead><tr><th>provider</th><th>kind</th><th>flag</th><th>verified</th></tr></thead>
+  <tbody>
   <tr><td><code>islo</code></td><td>microVM</td><td><code>--provider islo</code></td><td class="ok">✓</td></tr>
   <tr><td><code>local-container</code></td><td>local Docker</td><td><code>--provider local-container</code></td><td class="dim">·</td></tr>
   <tr><td><code>e2b</code> / <code>daytona</code> / <code>modal</code></td><td>cloud sandbox</td><td><code>--provider …</code></td><td class="dim">·</td></tr>
   <tr><td><code>aws</code> / <code>gcp</code> / <code>hetzner</code></td><td>VM</td><td><code>--provider …</code></td><td class="dim">·</td></tr>
+  </tbody>
 </table>
 
 <h2>Why this matters</h2>
@@ -202,12 +242,13 @@ run anywhere, leave nothing behind.</p>
 <footer>
   <a href="https://github.com/zozo123/odysseus/blob/main/crabbox.sh">crabbox.sh</a>
   <a href="https://github.com/zozo123/odysseus/blob/main/mcp_servers/crabbox_server.py">crabbox MCP</a>
-  <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2076">upstream PR #2076</a>
-  <a href="https://github.com/pewdiepie-archdaemon/odysseus/issues/2150">issue #2150</a>
+  <a href="https://github.com/odysseus-dev/odysseus/pull/2076">upstream PR #2076 (closed, not merged)</a>
+  <a href="https://github.com/odysseus-dev/odysseus/issues/2150">issue #2150</a>
   <a href="https://github.com/zozo123/odysseus">code (fork)</a>
   <a href="https://github.com/openclaw/crabbox">openclaw/crabbox</a>
   <a href="https://islo.dev">islo.dev</a>
-  <span style="margin-left:auto">verified Jun 2026 on a live islo.dev sandbox</span>
+  <a href="https://zozo123.github.io/">Yossi Eliaz · writing</a>
+  <span class="foot-note">verified Jun 2026 on islo.dev sandboxes</span>
 </footer>
 
 </body>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#050508"/>
+  <rect x="60" y="60" width="1080" height="510" fill="#0a0a0e" stroke="#1a1a20" stroke-width="2"/>
+  <rect x="60" y="60" width="6" height="510" fill="#00e05a"/>
+  <g font-family="JetBrains Mono, Menlo, DejaVu Sans Mono, monospace">
+    <text x="112" y="132" font-size="24" fill="#9aa3ae" letter-spacing="1">ODYSSEUS <tspan fill="#7a828e">×</tspan> CRABBOX <tspan fill="#7a828e">×</tspan> ISLO.DEV</text>
+    <text x="112" y="230" font-size="60" font-weight="700" fill="#ffffff">Odysseus on throwaway</text>
+    <text x="112" y="306" font-size="60" font-weight="700" fill="#ffffff">islo.dev microVMs</text>
+    <text x="112" y="380" font-size="24" fill="#b0b8c0"><tspan fill="#0cf">outer</tspan>  you ──▶ crabbox ──▶ box <tspan fill="#00e05a">runs Odysseus</tspan></text>
+    <text x="112" y="418" font-size="24" fill="#b0b8c0"><tspan fill="#0cf">inner</tspan>  agent ──▶ crabbox ──▶ box <tspan fill="#00e05a">runs its code</tspan></text>
+    <line x1="112" y1="468" x2="1088" y2="468" stroke="#1a1a20" stroke-width="2"/>
+    <text x="112" y="520" font-size="28" font-weight="700" fill="#00e05a">Yossi Eliaz <tspan fill="#9aa3ae" font-weight="400">· demo, Jun 2026</tspan></text>
+    <text x="1088" y="520" font-size="20" fill="#7a828e" text-anchor="end">zozo123.github.io/odysseus-crabbox-demo</text>
+  </g>
+</svg>
